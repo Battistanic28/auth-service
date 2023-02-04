@@ -1,12 +1,15 @@
 const express = require('express');
 const {ACCESS_TOKEN_SECRET} = require("../config");
-const posts = require('../mocks')
+const { posts, users } = require('../mocks')
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const { uuid: uuidv4 } = require('uuid');
 
 
-router.get('/posts', (req, res) => {
-    return res.json(posts)
+
+router.get('/users', (req, res) => {
+    return res.json(users)
 })
 
 router.post('/login', (req, res) => {
@@ -17,8 +20,19 @@ router.post('/login', (req, res) => {
     return res.json({ token: accessToken });
 })
 
-router.post('/register', (req, res) => {
-    
+router.post('/register', async (req, res) => {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10)
+        users.push({
+            id: uuid(),
+            username: req.body.name,
+            email: req.body.email,
+            password: hashedPassword
+        })
+    } catch {
+        return res.send('User registration failed');
+    }
+    res.json(users);
 })
 
 module.exports = router;
