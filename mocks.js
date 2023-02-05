@@ -1,13 +1,3 @@
-const posts = [
-    {
-        username: 'Battistanic90',
-        title: 'Post 1',
-    },
-    {
-        username: 'Battistanic90',
-        title: 'Post 2',
-    },
-];
 
 const users = [
     {
@@ -25,6 +15,5 @@ const users = [
 ];
 
 module.exports = {
-    posts,
     users,
 }
