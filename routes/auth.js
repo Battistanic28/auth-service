@@ -8,16 +8,23 @@ const { v4: uuid } = require('uuid');
 
 
 
-router.get('/users', (req, res) => {
-    return res.json(users)
-})
-
 router.post('/token', async (req, res) => {
-    const username = await req.body.username;
-    const user = { name: username };
+    const { username, password } = req.body;
+    const payload = { username: username, password: password };
 
-    const accessToken = jwt.sign(user, ACCESS_TOKEN_SECRET);
-    return res.json({ token: accessToken });
+    const user = users.filter(user => {
+        return user.username === username
+    })
+
+    if (user[0]) {
+        const isValid = await bcrypt.compare(password, user[0].password);
+
+        if (isValid) {
+            const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET);
+            return res.json({ token: accessToken });
+        }
+    }
+    return res.send('Invalid username/password');
 })
 
 router.post('/register', async (req, res) => {
@@ -25,7 +32,7 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         users.push({
             id: uuid(),
-            username: req.body.name,
+            username: req.body.username,
             email: req.body.email,
             password: hashedPassword
         })
