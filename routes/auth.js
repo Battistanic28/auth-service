@@ -23,7 +23,6 @@ router.post('/token', async (req, res) => {
 router.post('/register', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        console.log(hashedPassword);
         users.push({
             id: uuid(),
             username: req.body.name,
