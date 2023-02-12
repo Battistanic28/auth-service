@@ -1,4 +1,5 @@
 const db = require('../db');
+const bcrypt = require('bcrypt');
 
 class User {
 
@@ -24,7 +25,25 @@ class User {
             return user;
         };
         return console.log('User not found');
-    }
+    };
+
+    static async authenticate(username, password) {
+        const result = await db.query(
+            `SELECT * FROM users
+            WHERE username = $1`,
+            [username],
+        );
+
+        const user = result.rows[0]
+        if(user) {
+            const isValid = await bcrypt.compare(password, user.password)
+
+            if(isValid) {
+                return user;
+            }
+        };
+        return console.log('Invalid username/password');
+    };
 }
 
 
