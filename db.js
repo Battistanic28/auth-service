@@ -1,10 +1,12 @@
 
 const { Client } = require("pg");
 
-const DB_URI = 'postgresql:///auth_db';
-
 const db = new Client({
-    connectionString: DB_URI
+    host: 'localhost',
+    user: 'nick',
+    port: 5432,
+    password: 'rootUser',
+    database: 'auth_db',
 });
 
 db.connect();

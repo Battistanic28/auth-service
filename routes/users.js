@@ -1,7 +1,7 @@
 const express = require('express');
 const { users } = require('../mocks')
 const router = express.Router();
-// const User = require('../models/user');
+const User = require('../models/user');
 
 
 router.get('/', (req, res) => {
@@ -13,7 +13,7 @@ router.get('/db', async (req, res) => {
         const user = await User.findAll();
         return res.json({ user });
     } catch {
-        console.log('Could not fetch users');
+        res.send('Could not fetch users');
     }
 })
 
